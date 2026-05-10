@@ -1997,10 +1997,10 @@ collectData = function(){
   return data;
 };
 
-/* ── LOTE VALIDATION 9 chars ── */
+/* ── LOTE VALIDATION 10 chars ── */
 function validateLote(inp){
   inp.value = inp.value.toUpperCase();
-  if(inp.value.length > 9) inp.value = inp.value.slice(0,9);
+  if(inp.value.length > 10) inp.value = inp.value.slice(0,10);
   var filled = inp.value.length > 0;
   var complete = inp.value.length === 10;
   inp.style.fontWeight = filled ? '700' : '';
@@ -2014,7 +2014,7 @@ function validateLote(inp){
   }
 }
 function enforceLote(inp){
-  if(inp.value.length > 0 && inp.value.length < 9){
+  if(inp.value.length > 0 && inp.value.length < 10){
     inp.style.borderBottom = '2px solid #E24B4A';
     inp.title = 'Lote incompleto — requiere 10 caracteres ('+inp.value.length+'/10)';
   }
