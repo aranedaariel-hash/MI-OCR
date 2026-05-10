@@ -1201,14 +1201,14 @@ function addRow(type, data){
 
   } else if(type==='granel'){
     tr.innerHTML =
-      ocrCell('ti-lote ucase','Lote',d.lote,'lote','maxlength="9" oninput="validateLote(this)" onblur="enforceLote(this)"') +
+      ocrCell('ti-lote ucase','Lote',d.lote,'lote','maxlength="10" oninput="validateLote(this)" onblur="enforceLote(this)"') +
       ocrCell('ti-prod ucase','Producto',d.producto,'producto','') +
       '<td><input class="ti ucase" type="text" placeholder="Contenedor" value="'+escHtml(d.contenedor||'')+'"></td>'+
       '<td><input class="ti ucase" type="text" placeholder="Precinto" value="'+escHtml(d.precinto||'')+'"></td>';
 
   } else if(type==='barrido'){
     tr.innerHTML =
-      ocrCell('ti-lote ucase','Lote',d.lote,'lote','maxlength="9" oninput="validateLote(this)" onblur="enforceLote(this)"') +
+      ocrCell('ti-lote ucase','Lote',d.lote,'lote','maxlength="10" oninput="validateLote(this)" onblur="enforceLote(this)"') +
       ocrCell('ti-prod ucase','Producto',d.producto,'producto','') +
       '<td class="td-auto"><input class="ti tk-i" type="text" placeholder="KG" value="'+escHtml(d.ksEstimados||'')+'"></td>';
   }
@@ -1894,7 +1894,7 @@ addRow = function(type, data){
   var palInc  = d.palletsInc||0;
   var tr = document.createElement('tr');
   tr.innerHTML =
-    '<td style="width:18%"><div style="display:flex;align-items:center;gap:0;"><input class="ti ti-lote ucase" type="text" placeholder="Lote" maxlength="9" value="'+escHtml(d.lote||'')+'" oninput="validateLote(this)" onblur="enforceLote(this)" style="flex:1;min-width:0;">'+ocrBtnHtml('lote')+'</div></td>'+
+    '<td style="width:18%"><div style="display:flex;align-items:center;gap:0;"><input class="ti ti-lote ucase" type="text" placeholder="Lote" maxlength="10" value="'+escHtml(d.lote||'')+'" oninput="validateLote(this)" onblur="enforceLote(this)" style="flex:1;min-width:0;">'+ocrBtnHtml('lote')+'</div></td>'+
     '<td style="width:20%"><div style="display:flex;align-items:center;gap:0;"><input class="ti ti-prod ucase" type="text" placeholder="Producto" value="'+escHtml(d.producto||'')+'" style="flex:1;min-width:0;">'+ocrBtnHtml('producto')+'</div></td>'+
     '<td style="width:72px;"><div class="ccell"><button class="cbtn" onclick="chCnt(this,-1)">&#8722;</button><span class="cval" data-type="'+type+'">'+palCom+'</span><button class="cbtn" onclick="chCnt(this,1)">&#43;</button></div></td>'+
     '<td style="width:240px;"><input class="ti pal-inc-nums" type="text" placeholder="bolsas pal. inc." value="'+escHtml(d.palletsIncNums||'')+'" oninput="recalcPalIncNums(this)" onfocus="palIncFocus(this)" onblur="palIncBlur(this)" style="font-size:11.5px;color:var(--auto-tx);background:var(--auto-bg);"></td>'+
@@ -2002,12 +2002,12 @@ function validateLote(inp){
   inp.value = inp.value.toUpperCase();
   if(inp.value.length > 9) inp.value = inp.value.slice(0,9);
   var filled = inp.value.length > 0;
-  var complete = inp.value.length === 9;
+  var complete = inp.value.length === 10;
   inp.style.fontWeight = filled ? '700' : '';
   inp.style.fontSize = filled ? '13px' : '';
   if(filled && !complete){
     inp.style.borderBottom = '2px solid #E24B4A';
-    inp.title = 'Lote incompleto — requiere 9 caracteres ('+inp.value.length+'/9)';
+    inp.title = 'Lote incompleto — requiere 10 caracteres ('+inp.value.length+'/10)';
   } else {
     inp.style.borderBottom = complete ? '2px solid #1D9E75' : '';
     inp.title = complete ? 'Lote completo' : '';
@@ -2016,7 +2016,7 @@ function validateLote(inp){
 function enforceLote(inp){
   if(inp.value.length > 0 && inp.value.length < 9){
     inp.style.borderBottom = '2px solid #E24B4A';
-    inp.title = 'Lote incompleto — requiere 9 caracteres ('+inp.value.length+'/9)';
+    inp.title = 'Lote incompleto — requiere 10 caracteres ('+inp.value.length+'/10)';
   }
 }
 
