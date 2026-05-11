@@ -491,6 +491,61 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#eef4fb;color:var(--text)
 }
 .em-btn-confirm:hover{background:var(--b600);}
 
+/* ═══════════ BOTONES OCR BARRA INFERIOR ═══════════ */
+.ocr-bar-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:var(--rs);
+  font-size:11.5px;font-weight:500;
+  cursor:pointer;border:none;transition:all .13s;
+  font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;
+}
+.ocr-bar-btn.lote{
+  background:#0f3460;color:#fff;
+}
+.ocr-bar-btn.lote:hover{background:#1565c0;}
+.ocr-bar-btn.prod{
+  background:#1b5e20;color:#fff;
+}
+.ocr-bar-btn.prod:hover{background:#2e7d32;}
+.ocr-bar-btn svg{width:13px;height:13px;flex-shrink:0;}
+.ocr-bar-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* Panel OCR preview dentro del modal */
+.em-ocr-panel{
+  background:linear-gradient(135deg,#e3f2fd 0%,#f0f4ff 100%);
+  border:1.5px solid var(--b400);border-radius:8px;
+  padding:14px 16px;margin-bottom:12px;
+}
+.em-ocr-label{
+  font-size:9.5px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--b600);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.em-ocr-label::before{
+  content:'';display:inline-block;width:8px;height:8px;
+  background:var(--b500);border-radius:50%;
+  animation:pulse-ocr .9s ease-in-out infinite alternate;
+}
+@keyframes pulse-ocr{from{opacity:.4;transform:scale(.8);}to{opacity:1;transform:scale(1.1);}}
+.em-ocr-result{
+  font-family:'IBM Plex Mono',monospace;font-size:20px;
+  font-weight:800;color:var(--b700);letter-spacing:2px;
+  text-align:center;padding:6px 0 2px;word-break:break-all;
+}
+.em-ocr-hint{
+  font-size:10px;color:var(--text3);text-align:center;margin-top:4px;
+}
+.em-ocr-separator{
+  display:flex;align-items:center;gap:8px;margin:10px 0;
+  font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;
+}
+.em-ocr-separator::before,.em-ocr-separator::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* Input OCR en archivo (oculto) */
+#ocr-lote-file-input,#ocr-prod-file-input{display:none;}
+
 </style>
 </head>
 <body>
@@ -499,6 +554,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#eef4fb;color:var(--text)
 <div id="s-home" class="screen on">
   <div class="topbar">
     <div class="topbar-logo">Carga <em>Sólida</em> — Inspector</div>
+    <button class="tbtn ghost" onclick="openSettings()" title="Configurar API Key OCR" style="padding:6px 10px;">⚙️</button>
     <button class="tbtn accent" onclick="newForm()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Nueva inspección
@@ -632,6 +688,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#eef4fb;color:var(--text)
           <div class="cargo-btns">
             <button class="add-row" onclick="addRow('pal60')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar fila</button>
             <button class="del-row-btn" onclick="delRow('pal60')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>Eliminar fila</button>
+            <button class="ocr-bar-btn lote" onclick="triggerOCRScan('lote','pal60')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h2v2H7zM15 7h2v2h-2zM7 15h2v2H7zM11 11h2v2h-2zM15 15h2v2h-2z"/></svg>Escanear lote</button>
+            <button class="ocr-bar-btn prod" onclick="triggerOCRScan('producto','pal60')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 12h.01"/></svg>Escanear producto</button>
           </div>
         </div>
 
@@ -647,6 +705,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#eef4fb;color:var(--text)
           <div class="cargo-btns">
             <button class="add-row" onclick="addRow('pal55')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar fila</button>
             <button class="del-row-btn" onclick="delRow('pal55')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>Eliminar fila</button>
+            <button class="ocr-bar-btn lote" onclick="triggerOCRScan('lote','pal55')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h2v2H7zM15 7h2v2h-2zM7 15h2v2H7zM11 11h2v2h-2zM15 15h2v2h-2z"/></svg>Escanear lote</button>
+            <button class="ocr-bar-btn prod" onclick="triggerOCRScan('producto','pal55')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 12h.01"/></svg>Escanear producto</button>
           </div>
         </div>
 
@@ -661,6 +721,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#eef4fb;color:var(--text)
           <div class="cargo-btns">
             <button class="add-row" onclick="addRow('bol1200')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar fila</button>
             <button class="del-row-btn" onclick="delRow('bol1200')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>Eliminar fila</button>
+            <button class="ocr-bar-btn lote" onclick="triggerOCRScan('lote','bol1200')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h2v2H7zM15 7h2v2h-2zM7 15h2v2H7zM11 11h2v2h-2zM15 15h2v2h-2z"/></svg>Escanear lote</button>
+            <button class="ocr-bar-btn prod" onclick="triggerOCRScan('producto','bol1200')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 12h.01"/></svg>Escanear producto</button>
           </div>
         </div>
 
@@ -675,6 +737,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#eef4fb;color:var(--text)
           <div class="cargo-btns">
             <button class="add-row" onclick="addRow('bol1500')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar fila</button>
             <button class="del-row-btn" onclick="delRow('bol1500')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>Eliminar fila</button>
+            <button class="ocr-bar-btn lote" onclick="triggerOCRScan('lote','bol1500')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h2v2H7zM15 7h2v2h-2zM7 15h2v2H7zM11 11h2v2h-2zM15 15h2v2h-2z"/></svg>Escanear lote</button>
+            <button class="ocr-bar-btn prod" onclick="triggerOCRScan('producto','bol1500')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 12h.01"/></svg>Escanear producto</button>
           </div>
         </div>
 
@@ -688,6 +752,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#eef4fb;color:var(--text)
           <div class="cargo-btns">
             <button class="add-row" onclick="addRow('granel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar fila</button>
             <button class="del-row-btn" onclick="delRow('granel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>Eliminar fila</button>
+            <button class="ocr-bar-btn lote" onclick="triggerOCRScan('lote','granel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h2v2H7zM15 7h2v2h-2zM7 15h2v2H7zM11 11h2v2h-2zM15 15h2v2h-2z"/></svg>Escanear lote</button>
+            <button class="ocr-bar-btn prod" onclick="triggerOCRScan('producto','granel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 12h.01"/></svg>Escanear producto</button>
           </div>
         </div>
 
@@ -702,6 +768,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#eef4fb;color:var(--text)
           <div class="cargo-btns">
             <button class="add-row" onclick="addRow('barrido')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar fila</button>
             <button class="del-row-btn" onclick="delRow('barrido')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>Eliminar fila</button>
+            <button class="ocr-bar-btn lote" onclick="triggerOCRScan('lote','barrido')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h2v2H7zM15 7h2v2h-2zM7 15h2v2H7zM11 11h2v2h-2zM15 15h2v2h-2z"/></svg>Escanear lote</button>
+            <button class="ocr-bar-btn prod" onclick="triggerOCRScan('producto','barrido')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 12h.01"/></svg>Escanear producto</button>
           </div>
         </div>
       </div>
@@ -2688,13 +2756,52 @@ function buildResumenPDFHtml(insp){
 </script>
 
 <!-- ══════════════════════════════════════
+     MODAL SETTINGS — API Key Claude
+     ══════════════════════════════════════ -->
+<div id="settings-overlay" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(10,25,41,.78);align-items:center;justify-content:center;padding:16px;">
+  <div style="background:#fff;border-radius:12px;width:100%;max-width:380px;box-shadow:0 16px 56px rgba(15,52,96,.3);overflow:hidden;">
+    <div style="background:var(--b700);padding:16px 18px;display:flex;align-items:center;gap:10px;">
+      <span style="color:#fff;font-size:14px;font-weight:600;flex:1;">⚙️ Configuración OCR</span>
+      <button onclick="closeSettings()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div style="padding:20px 18px;">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.6;">
+        Ingresá tu <strong>API Key de Anthropic</strong> para habilitar el escaneo OCR de lotes y productos.<br>
+        Se guarda localmente en este dispositivo.
+      </div>
+      <label style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);">API Key</label>
+      <input id="cfg-apikey" type="password" placeholder="sk-ant-api03-..." 
+        style="width:100%;margin-top:6px;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'IBM Plex Mono',monospace;outline:none;box-sizing:border-box;">
+    </div>
+    <div style="padding:0 18px 18px;display:flex;gap:8px;">
+      <button onclick="closeSettings()" style="padding:10px 16px;border-radius:6px;border:1.5px solid var(--border);background:#fff;color:var(--text2);font-size:13px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;">Cancelar</button>
+      <button onclick="saveSettings()" style="flex:1;padding:10px;border-radius:6px;border:none;background:var(--b700);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
      MODAL INGRESO RÁPIDO — Lote / Producto
      ══════════════════════════════════════ -->
+<!-- Inputs ocultos para captura de foto OCR -->
+<input type="file" id="ocr-lote-file-input" accept="image/*" capture="environment">
+<input type="file" id="ocr-prod-file-input" accept="image/*" capture="environment">
+
 <div id="entry-modal">
   <div class="em-box">
     <div class="em-head">
       <span class="em-head-title" id="em-title">Ingresar Lote</span>
       <button class="em-close" onclick="emCancel()">✕</button>
+    </div>
+
+    <!-- Panel OCR resultado (visible solo cuando viene de scan) -->
+    <div id="em-ocr-panel" class="em-ocr-panel" style="display:none;margin:16px 18px 0;">
+      <div class="em-ocr-label">Resultado del escaneo</div>
+      <div class="em-ocr-result" id="em-ocr-result-text">—</div>
+      <div class="em-ocr-hint">Revisá el resultado. Podés corregirlo abajo antes de confirmar.</div>
+    </div>
+    <div id="em-ocr-separator" style="display:none;">
+      <div class="em-ocr-separator" style="margin:0 18px;">Corregir si es necesario</div>
     </div>
 
     <!-- LOTE: 3 segmentos 4+3+3 = 10 chars -->
@@ -2740,6 +2847,109 @@ function buildResumenPDFHtml(insp){
 /* ═══════════════════════════════════════════
    MÓDULO INGRESO RÁPIDO — Lote / Producto
    ═══════════════════════════════════════════ */
+
+/* ── Funciones base OCR ── */
+var AI_KEY_STORE = 'mi_insp_ai_key';
+var AI_LOG_STORE = 'ai_scan_log';
+
+function getApiKey(){ return localStorage.getItem(AI_KEY_STORE)||''; }
+function openSettings(){
+  var ov = document.getElementById('settings-overlay');
+  var ki = document.getElementById('cfg-apikey');
+  if(ki) ki.value = getApiKey();
+  if(ov){ ov.style.display='flex'; }
+}
+function closeSettings(){
+  var ov = document.getElementById('settings-overlay');
+  if(ov) ov.style.display='none';
+}
+function saveSettings(){
+  var ki = document.getElementById('cfg-apikey');
+  var k = ki ? ki.value.trim() : '';
+  if(k) localStorage.setItem(AI_KEY_STORE, k);
+  else localStorage.removeItem(AI_KEY_STORE);
+  closeSettings();
+  showToast(k ? 'API Key guardada' : 'API Key eliminada');
+}
+
+function logScan(tipo, imagen64, claudeRaw, claudeParsed, userFinal, corrected){
+  try{
+    var log = JSON.parse(localStorage.getItem(AI_LOG_STORE)||'[]');
+    log.push({
+      id: 'scan_'+Date.now(),
+      timestamp: new Date().toISOString(),
+      tipo: tipo,
+      claudeRaw: claudeRaw,
+      claudeParsed: claudeParsed,
+      userFinal: userFinal||claudeParsed,
+      corrected: corrected||false,
+      accuracy: corrected ? 0.5 : 1.0
+    });
+    if(log.length > 500) log = log.slice(-500);
+    localStorage.setItem(AI_LOG_STORE, JSON.stringify(log));
+  }catch(e){}
+}
+
+async function callClaudeVision(base64img, prompt){
+  var key = getApiKey();
+  if(!key){ showToast('Configurá tu API Key en ⚙️'); openSettings(); return null; }
+  try{
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64img } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+    if(!resp.ok){
+      var errText = '';
+      try{ errText = await resp.text(); }catch(e2){}
+      if(resp.status === 401) showToast('API Key inválida. Verificala en ⚙️');
+      else if(resp.status === 429) showToast('Demasiadas solicitudes. Esperá unos segundos.');
+      else if(resp.status === 400 && errText.indexOf('Could not process image')>=0) showToast('No se pudo procesar la imagen. Intentá con otra foto.');
+      else showToast('Error API: '+resp.status);
+      return null;
+    }
+    var data = await resp.json();
+    return data.content.map(function(c){return c.text||'';}).join('');
+  }catch(e){
+    if(e.message && e.message.indexOf('Failed to fetch')>=0){
+      showToast('Error CORS. Abrí la app desde servidor local o Vercel.');
+    } else {
+      showToast('Error: '+e.message);
+    }
+    return null;
+  }
+}
+
+function imgToBase64(file, maxW, cb){
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = new Image();
+    img.onload = function(){
+      var c = document.createElement('canvas');
+      var scale = Math.min(1, maxW/Math.max(img.width, img.height));
+      c.width = img.width*scale; c.height = img.height*scale;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      cb(c.toDataURL('image/jpeg', 0.8).split(',')[1]);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
 var _emTarget    = null;
 var _emFieldType = '';
@@ -2865,6 +3075,172 @@ function emCancel(){
 document.getElementById('entry-modal').addEventListener('click', function(e){
   if(e.target === this) emCancel();
 });
+
+/* ═══════════════════════════════════════════════════════
+   MÓDULO OCR — Escaneo de Lote / Producto desde barra
+   ═══════════════════════════════════════════════════════
+   Flujo:
+   1. triggerOCRScan(field, cargoType) → abre cámara
+   2. handleOCRFile → comprime imagen → llama Claude
+   3. showOCRResultInModal → pre-llena modal segmentos
+   4. Auditor confirma/corrige → emConfirm() → escribe en última fila
+   ══════════════════════════════════════════════════════ */
+
+var _ocrField    = '';   // 'lote' | 'producto'
+var _ocrCargoType = '';  // 'pal60' | 'pal55' | etc.
+var _ocrFromScan = false;
+
+/* ── Lanzar cámara según campo ── */
+function triggerOCRScan(field, cargoType){
+  if(!getApiKey()){ showToast('Primero configurá tu API Key en ⚙️'); openSettings(); return; }
+  _ocrField     = field;
+  _ocrCargoType = cargoType;
+  var inp = document.getElementById(field === 'lote' ? 'ocr-lote-file-input' : 'ocr-prod-file-input');
+  if(!inp) return;
+  inp.value = '';
+  inp.click();
+}
+
+/* ── Manejar archivo capturado ── */
+function _handleOCRCapture(input, field){
+  if(!input.files || !input.files[0]) return;
+  _ocrField = field;
+  showToast('🔄 Escaneando ' + (field === 'lote' ? 'lote' : 'producto') + '...');
+
+  imgToBase64(input.files[0], 1200, function(b64){
+    var prompt = field === 'lote'
+      ? 'Lee esta foto de una bolsa de polietileno. Extraé el LOTE y el MATERIAL.\n\n' +
+        'ESTRUCTURA DEL LOTE (9 caracteres exactos):\n' +
+        '- Posiciones 1-4: planta. Valores posibles: C098, C099, C100, C101\n' +
+        '- Posición 5: año. Letra del abecedario desde 2010=A. Ej: 2024=O, 2025=P, 2026=Q\n' +
+        '- Posición 6: mes. 1-9 para ene-sep, A=oct, B=nov, C=dic\n' +
+        '- Posición 7: día. 1-9 para días 1-9, A=10, B=11, C=12... V=31\n' +
+        '- Posiciones 8-9: contador 01-99\n' +
+        'Ejemplos válidos: C101Q51879, C099Q4P545, C101Q4U878, C100P3A012\n' +
+        'IGNORAR sufijos /CT /WH /MH que puedan aparecer después del lote.\n\n' +
+        'MATERIAL (solo el código, sin la densidad):\n' +
+        'En la bolsa aparece algo como "LLDPE 1613.11" o "HDPE 208M". IGNORAR la sigla de densidad y devolver SOLO el código.\n' +
+        'Materiales conocidos: 1613.11, 208M, 204M, IP-20, DOWLEX 2067, 3055L, 7000, PBR 505, 2045G, 61800, AGILITY, VERSIFY, INFUSE, INNATE, ELITE, AFFINITY, ENGAGE, NORDEL\n\n' +
+        'Respondé SOLO JSON: {"lote":"...","producto":"..."}\n' +
+        'Sin markdown, sin bloques de código, solo el JSON puro.'
+      : 'Lee esta foto de una bolsa de polietileno. Extraé el MATERIAL (código de producto).\n\n' +
+        'En la bolsa aparece algo como "LLDPE 1613.11" o "HDPE 208M". IGNORAR la sigla de densidad (LLDPE, HDPE, LDPE, EPE) y devolver SOLO el código.\n' +
+        'Materiales conocidos: 1613.11, 208M, 204M, IP-20, DOWLEX 2067, 3055L, 7000, PBR 505, 2045G, 61800, AGILITY, VERSIFY, INFUSE, INNATE, ELITE, AFFINITY, ENGAGE, NORDEL\n' +
+        'Si el material no está en la lista pero se lee claramente, devolvelo igual.\n\n' +
+        'Respondé SOLO JSON: {"producto":"..."}\n' +
+        'Sin markdown, sin bloques de código, solo el JSON puro.';
+
+    callClaudeVision(b64, prompt).then(function(result){
+      if(!result){ showToast('No se pudo leer la imagen'); return; }
+      try{
+        var clean = result.replace(/```json|```/g,'').trim();
+        var parsed = JSON.parse(clean);
+        logScan(field === 'lote' ? 'bolsa' : 'producto', '', result, parsed, null, false);
+        showOCRResultInModal(field, parsed);
+      }catch(e){
+        showToast('No se pudo interpretar la respuesta de Claude');
+        console.error('OCR parse error:', e, result);
+      }
+    }).catch(function(e){
+      showToast('Error al conectar con Claude API');
+    });
+  });
+  input.value = '';
+}
+
+/* ── Pre-llenar el modal con resultado OCR y abrirlo ── */
+function showOCRResultInModal(field, parsed){
+  _ocrFromScan = true;
+  _emFieldType = field;
+
+  /* Buscar la última fila del tipo activo para tener un target */
+  var tbody = document.getElementById('bd-' + _ocrCargoType);
+  var rows = tbody ? tbody.querySelectorAll('tr') : [];
+  /* Si no hay filas, agregar una nueva */
+  if(rows.length === 0){
+    addRow(_ocrCargoType);
+    rows = tbody.querySelectorAll('tr');
+  }
+  var lastRow = rows[rows.length - 1];
+  var inp = lastRow ? lastRow.querySelector(field === 'lote' ? 'input[placeholder="Lote"]' : 'input[placeholder="Producto"]') : null;
+  _emTarget = inp || null;
+
+  /* Limpiar modal */
+  ['em-l1','em-l2','em-l3'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){ el.value = ''; el.classList.remove('ok'); }
+  });
+  var preview = document.getElementById('em-lote-preview');
+  var errL    = document.getElementById('em-lote-error');
+  if(preview) preview.textContent = '';
+  if(errL)    errL.textContent = '';
+  var prodEl  = document.getElementById('em-prod');
+  var errP    = document.getElementById('em-prod-error');
+  if(prodEl)  prodEl.value = '';
+  if(errP)    errP.textContent = '';
+
+  var isLote = (field === 'lote');
+
+  /* Mostrar panel OCR con resultado */
+  var panel = document.getElementById('em-ocr-panel');
+  var sep   = document.getElementById('em-ocr-separator');
+  var resEl = document.getElementById('em-ocr-result-text');
+  var ocrVal = isLote ? (parsed.lote || '?') : (parsed.producto || '?');
+  if(panel)  panel.style.display = '';
+  if(sep)    sep.style.display   = '';
+  if(resEl)  resEl.textContent   = ocrVal;
+
+  /* Pre-llenar los campos de edición con el resultado */
+  if(isLote){
+    var lote = (parsed.lote || '').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);
+    var seg1 = lote.slice(0,4);
+    var seg2 = lote.slice(4,7);
+    var seg3 = lote.slice(7,10);
+    var l1 = document.getElementById('em-l1');
+    var l2 = document.getElementById('em-l2');
+    var l3 = document.getElementById('em-l3');
+    if(l1){ l1.value = seg1; l1.classList.toggle('ok', seg1.length===4); }
+    if(l2){ l2.value = seg2; l2.classList.toggle('ok', seg2.length===3); }
+    if(l3){ l3.value = seg3; l3.classList.toggle('ok', seg3.length===3); }
+    emUpdatePreview();
+  } else {
+    var prod = document.getElementById('em-prod');
+    if(prod) prod.value = (parsed.producto || '').toUpperCase();
+  }
+
+  /* Título y visibilidad de secciones */
+  document.getElementById('em-title').textContent = isLote ? '📷 Lote escaneado' : '📷 Producto escaneado';
+  document.getElementById('em-body-lote').style.display = isLote ? '' : 'none';
+  document.getElementById('em-body-prod').style.display = isLote ? 'none' : '';
+
+  /* Abrir modal */
+  document.getElementById('entry-modal').classList.add('on');
+  setTimeout(function(){
+    var first = isLote ? document.getElementById('em-l1') : document.getElementById('em-prod');
+    if(first) first.focus();
+  }, 80);
+  showToast('✅ Revisá y confirmá el resultado');
+}
+
+/* ── Wires de los inputs de archivo ── */
+document.getElementById('ocr-lote-file-input').addEventListener('change', function(){
+  _handleOCRCapture(this, 'lote');
+});
+document.getElementById('ocr-prod-file-input').addEventListener('change', function(){
+  _handleOCRCapture(this, 'producto');
+});
+
+/* ── Limpiar panel OCR cuando se cancela ── */
+var _origEmCancel = emCancel;
+emCancel = function(){
+  _origEmCancel();
+  _ocrFromScan = false;
+  var panel = document.getElementById('em-ocr-panel');
+  var sep   = document.getElementById('em-ocr-separator');
+  if(panel) panel.style.display = 'none';
+  if(sep)   sep.style.display   = 'none';
+  document.getElementById('em-title').textContent = 'Ingresar Lote';
+};
 </script>
 
 </body>
