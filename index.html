@@ -3110,17 +3110,19 @@ function _handleOCRCapture(input, field){
   imgToBase64(input.files[0], 1200, function(b64){
     var prompt = field === 'lote'
       ? 'Lee esta foto de una bolsa de polietileno. Extraé el LOTE y el MATERIAL.\n\n' +
-        'ESTRUCTURA DEL LOTE (9 caracteres exactos):\n' +
+        'ESTRUCTURA DEL LOTE (10 caracteres exactos, siempre):\n' +
         '- Posiciones 1-4: planta. Valores posibles: C098, C099, C100, C101\n' +
-        '- Posición 5: año. Letra del abecedario desde 2010=A. Ej: 2024=O, 2025=P, 2026=Q\n' +
+        '- Posición 5: año. SIEMPRE es una letra mayúscula A-Z (nunca un número). A=2010, B=2011... P=2025, Q=2026. Si lees un número en esta posición es error de lectura.\n' +
         '- Posición 6: mes. 1-9 para ene-sep, A=oct, B=nov, C=dic\n' +
-        '- Posición 7: día. 1-9 para días 1-9, A=10, B=11, C=12... V=31\n' +
-        '- Posiciones 8-9: contador 01-99\n' +
-        'Ejemplos válidos: C101Q51879, C099Q4P545, C101Q4U878, C100P3A012\n' +
-        'IGNORAR sufijos /CT /WH /MH que puedan aparecer después del lote.\n\n' +
+        '- Posición 7: día. 1-9 para días 1-9, A=10, B=11, C=12, D=13, E=14, F=15, G=16, H=17, I=18, J=19, K=20, L=21, M=22, N=23, O=24, P=25, Q=26, R=27, S=28, T=29, U=30, V=31\n' +
+        '- Posiciones 8-9-10: contador de 3 dígitos, del 001 al 999\n\n' +
+        'Ejemplos reales válidos: C101Q3D635, C098Q35475, C099Q2J344, C099PCF127\n' +
+        'IGNORAR sufijos /CT /WH /MH que puedan aparecer después del lote.\n' +
+        'IMPORTANTE: si el resultado no tiene exactamente 10 caracteres o la posición 5 no es una letra A-Z, revisá la lectura antes de responder.\n\n' +
         'MATERIAL (solo el código, sin la densidad):\n' +
-        'En la bolsa aparece algo como "LLDPE 1613.11" o "HDPE 208M". IGNORAR la sigla de densidad y devolver SOLO el código.\n' +
-        'Materiales conocidos: 1613.11, 208M, 204M, IP-20, DOWLEX 2067, 3055L, 7000, PBR 505, 2045G, 61800, AGILITY, VERSIFY, INFUSE, INNATE, ELITE, AFFINITY, ENGAGE, NORDEL\n\n' +
+        'En la bolsa aparece algo como "LLDPE 1613.11" o "HDPE 208M". IGNORAR la sigla de densidad (LLDPE, HDPE, LDPE, EPE, PE BAJA DENSIDAD) y devolver SOLO el código.\n' +
+        'Materiales conocidos: 1613.11, 208M, 204M, IP-20, DOWLEX 2067, 3055L, 7000, PBR 505, 2045G, 61800, AGILITY, VERSIFY, INFUSE, INNATE, ELITE, AFFINITY, ENGAGE, NORDEL\n' +
+        'Si el material no está en la lista pero se lee claramente, devolvelo igual.\n\n' +
         'Respondé SOLO JSON: {"lote":"...","producto":"..."}\n' +
         'Sin markdown, sin bloques de código, solo el JSON puro.'
       : 'Lee esta foto de una bolsa de polietileno. Extraé el MATERIAL (código de producto).\n\n' +
